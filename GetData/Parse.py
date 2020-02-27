@@ -1,7 +1,13 @@
 import requests
+from bs4 import BeautifulSoup
 
 # Social Media Page
-page = requests.get("https://nihalpotdar.github.io")
+URL = "https://nihalpotdar.github.io"
+page = requests.get(URL)
 
+soup = BeautifulSoup(page.content, 'html.parser')
+
+results = soup.find('')
 # Printing out the content for testing
-print(page.content)
+print(results.prettify())
+
