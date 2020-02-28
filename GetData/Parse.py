@@ -13,7 +13,7 @@ results = soup.find('')
 # Printing out the content for testing
 print(results.prettify())
 '''
-
+#http://docs.tweepy.org/en/latest/api.html#api-reference
 import tweepy
 import credentials
 
@@ -28,7 +28,20 @@ for tweet in public_tweets:
     print(tweet)
 '''
 
+#finding where there is a mention of my name
+print("\n'''''''''''RECENT MENTIONS''''''''''''''''''''''")
+recent_mentions = api.mentions_timeline()
+for mention in recent_mentions:
+    print(mention.text)
+print("'''''''''''''''''''''''''''''''''''''''''''''''''")
+
+required_friends = ['YouthCentralYYC']
+
+print("\n''''''''''''''''FRIENDS'''''''''''''''''''''''''")
 # user object for twitter
 user = api.get_user('NihalPotdar')
 print(user.screen_name)
 print(user.followers_count)
+for friend in user.friends():
+    print(friend.screen_name)
+print("'''''''''''''''''''''''''''''''''''''''''''''''''")
