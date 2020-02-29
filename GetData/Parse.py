@@ -28,7 +28,7 @@ api = tweepy.API(auth)
 client = MongoClient(credentials.mongo_db_client)
 mentions_collection = client.Twitter_API.Mentions 
 # remove everything in the database
-#mentions_collection.delete_many({})
+mentions_collection.delete_many({})
 
 def friends():
     # finding if a required friend has made a post
@@ -39,7 +39,7 @@ def friends():
     for friend in user.friends():
         print(friend.screen_name)
 
-def upload(mention): # get the tweet and upload to mongodb
+def document_value(mention): # returns an object that is added to mongo db
     upload = {}
     try:
         upload['url'] = mention._json['entities']['urls'][0]['expanded_url']     
@@ -48,12 +48,14 @@ def upload(mention): # get the tweet and upload to mongodb
         upload['tweet'] = mention.text
         upload['retweet_count'] = mention.retweet_count
         upload['liked count'] = mention.favorite_count
-        print(upload)
+        return upload
     except:
-        print("There's an error!")
+        return { 'problem':"There's an error!" }
 
+def upload(mention): # get the tweet and upload to mongodb
+    print(document_value(mention))
     mentions_collection.insert_one(
-        upload
+       document_value(mention)
     )
 
 if(__name__ == '__main__'):
