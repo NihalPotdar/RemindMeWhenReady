@@ -24,33 +24,22 @@ auth = tweepy.OAuthHandler(credentials.consumer_key, credentials.consumer_secret
 auth.set_access_token(credentials.access_key, credentials.access_key_secret)
 api = tweepy.API(auth)
 
-'''
-
 # connect to mongo_db
 client = MongoClient(credentials.mongo_db_client)
-
-#finding where there is a mention of name
-
-# make a post to mongo_db, take mentions and add to db
 mentions_collection = client.Twitter_API.Mentions 
-
 # remove everything in the database
 #mentions_collection.delete_many({})
 
-# finding if a required friend has made a post
-required_friends = ['YouthCentralYYC']
-
-
 def friends():
-    # user object for twitte
+    # finding if a required friend has made a post
+    required_friends = ['YouthCentralYYC']
     user = api.get_user('NihalPotdar')
     print(user.screen_name)
     print(user.followers_count)
     for friend in user.friends():
         print(friend.screen_name)
-'''
 
-def upload(mention):
+def upload(mention): # get the tweet and upload to mongodb
     upload = {}
     try:
         upload['url'] = mention._json['entities']['urls'][0]['expanded_url']     
@@ -63,14 +52,13 @@ def upload(mention):
     except:
         print("There's an error!")
 
-'''
-        mentions_collection.insert_one(
-            mention._json
-        )
-'''
+    mentions_collection.insert_one(
+        upload
+    )
 
-# recent mentions on twitter
-recent_mentions = api.mentions_timeline()
-# add a document to the database
-for mention in recent_mentions:
-    upload(mention)
+if(__name__ == '__main__'):
+    # recent mentions on twitter
+    recent_mentions = api.mentions_timeline()
+    # add a document to the database
+    for mention in recent_mentions:
+        upload(mention)
