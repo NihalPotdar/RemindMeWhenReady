@@ -57,16 +57,16 @@ for mention in recent_mentions:
     '''
 
 try:
-    print(mention.entities.entities)
+    print(mention._json['entities']['urls'][0]['expanded_url'])
 except:
     print("There's an error!")
-    '''
+    
     print(mention.user.name)
     print(mention.user.screen_name)
     print(mention.text)
     print(mention.retweet_count)
     print(mention.favorite_count)
-'''
+
 #print("'''''''''''''''''''''''''''''''''''''''''''''''''")
 
 # finding if a required friend has made a post
