@@ -30,6 +30,9 @@ mentions_collection = client.Twitter_API.Mentions
 # remove everything in the database
 mentions_collection.delete_many({})
 
+# send grid message
+message = {}
+
 def friends():
     # finding if a required friend has made a post
     required_friends = ['YouthCentralYYC']
@@ -39,10 +42,19 @@ def friends():
     for friend in user.friends():
         print(friend.screen_name)
 
+def validate_doc(url): # returns true if the tweet exists and false otherwise
+    return False if mentions_collection.count_documents({'url':url}) > 0 else True
+
+def formulate_message(doc, created_at):
+    message[created_at] = doc
+    print(message)
+
 def document_value(mention): # returns an object that is added to mongo db
     upload = {}
     try:
-        upload['url'] = mention._json['entities']['urls'][0]['expanded_url']     
+        url = mention._json['entities']['urls'][0]['expanded_url']
+        upload['url'] = url
+        upload['created_at'] = mention._json['created_at']
         upload['name'] = mention.user.name
         upload['twitter_handle'] = mention.user.screen_name
         upload['tweet'] = mention.text
@@ -53,14 +65,25 @@ def document_value(mention): # returns an object that is added to mongo db
         return { 'problem':"There's an error!" }
 
 def upload(mention): # get the tweet and upload to mongodb
-    print(document_value(mention))
+    doc = document_value(mention) # get the document to be uploaded
+    formulate_message(doc, doc['created_at']) # add it to the sendgrid message
     mentions_collection.insert_one(
-       document_value(mention)
+       doc
     )
 
 if(__name__ == '__main__'):
     # recent mentions on twitter
     recent_mentions = api.mentions_timeline()
-    # add a document to the database
+    # add a document to the database      
     for mention in recent_mentions:
-        upload(mention)
+        try:
+            url = mention._json['entities']['urls'][0]['expanded_url']
+            if(validate_doc(url)): # if the specified tweet doesn't exist
+                upload(mention)  
+            else:
+                print("already exists")          
+        except: # won't add the tweet if there is a problem
+            continue
+
+# get all mentions and add to mongo_db
+# compare existing mentions if they don't exist
