@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 @app.route('/', methods=['POST'])
 def hello_world():
-    return str(send_email(str(request.json)))
+    return str(send_email(str(request.get_json())))
 
 def send_email(body):
     # creating the send grid service
