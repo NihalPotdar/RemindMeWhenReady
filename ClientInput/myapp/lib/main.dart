@@ -5,12 +5,14 @@ main() {
 }
 
 class MyApp extends StatelessWidget {
-  build(context) {
+  @override
+  Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text('EasyList'),
+          title: Text('Test123'),
         ),
+        body: Card(child: ),
       ),
     );
   }
