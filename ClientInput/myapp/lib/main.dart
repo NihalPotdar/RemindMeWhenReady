@@ -12,7 +12,26 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(
           title: Text('Test123'),
         ),
-        body: Card(child: ),
+        body: Column(      
+          children: [ 
+            Container(
+              margin: EdgeInsets.all(10.0),
+              child:
+                RaisedButton(
+                child: 
+                  Text("Hello World"), 
+                  onPressed: (){},
+              ),
+            ),
+            
+            Card(
+                child: Column(children: <Widget>[
+                  Image.asset('assets/camera.png'),
+                  Text('Camera Icon')
+            ],
+            ),),
+          ] // end child
+        ),
       ),
     );
   }
