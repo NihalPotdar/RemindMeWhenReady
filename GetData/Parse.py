@@ -4,14 +4,12 @@ import requests
 from bs4 import BeautifulSoup
 
 # Social Media Page
-URL = "https://nihalpotdar.github.io"
-page = requests.get(URL)
-
+URL = "https://en6cpzpxozs1d.x.pipedream.net"
+request.get(URL)
 soup = BeautifulSoup(page.content, 'html.parser')
 
-results = soup.find('')
-# Printing out the content for testing
-print(results.prettify())
+print(soup.prettify())
+
 '''
 #http://docs.tweepy.org/en/latest/api.html#api-reference
 import tweepy
