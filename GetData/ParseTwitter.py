@@ -1,21 +1,9 @@
-# the aim of this app is to act as a social media handler
-'''
-import requests
-from bs4 import BeautifulSoup
-
-# Social Media Page
-URL = "https://en6cpzpxozs1d.x.pipedream.net"
-request.get(URL)
-soup = BeautifulSoup(page.content, 'html.parser')
-
-print(soup.prettify())
-
-'''
 #http://docs.tweepy.org/en/latest/api.html#api-reference
 import tweepy
 import credentials
 from pymongo import MongoClient
 import json
+import UserDetails
 
 # my credentials
 auth = tweepy.OAuthHandler(credentials.consumer_key, credentials.consumer_secret_key)
@@ -26,7 +14,7 @@ api = tweepy.API(auth)
 client = MongoClient(credentials.mongo_db_client)
 mentions_collection = client.Twitter_API.Mentions 
 # remove everything in the database
-mentions_collection.delete_many({})
+#mentions_collection.delete_many({})
 
 # send grid message
 message = {}
@@ -47,10 +35,9 @@ def formulate_message(doc, created_at):
     message[created_at] = doc
     print(message)
 
-def document_value(mention): # returns an object that is added to mongo db
+def document_value(mention, url): # returns an object that is added to mongo db
     upload = {}
     try:
-        url = mention._json['entities']['urls'][0]['expanded_url']
         upload['url'] = url
         upload['created_at'] = mention._json['created_at']
         upload['name'] = mention.user.name
@@ -62,26 +49,33 @@ def document_value(mention): # returns an object that is added to mongo db
     except:
         return { 'problem':"There's an error!" }
 
-def upload(mention): # get the tweet and upload to mongodb
-    doc = document_value(mention) # get the document to be uploaded
+def upload(mention, url): # get the tweet and upload to mongodb
+    doc = document_value(mention, url) # get the document to be uploaded
     formulate_message(doc, doc['created_at']) # add it to the sendgrid message
     mentions_collection.insert_one(
        doc
     )
 
+def tweet_logic(mention):
+    try:
+        if(len(mention._json['entities']['urls']) != 0): # direct mention in tweet
+            url = mention._json['entities']['urls'][0]['expanded_url']
+        else: # tweet reply
+            url = mention._json['user']['url']
+
+        if(validate_doc(url)): # if the specified tweet doesn't exist
+            upload(mention, url)  
+        else:
+            print("already exists")          
+    except Exception as e: # won't add the tweet if there is a problem
+        print(e)
+
 if(__name__ == '__main__'):
+    # name of the user
+    user = UserDetails.user
+    
     # recent mentions on twitter
     recent_mentions = api.mentions_timeline()
-    # add a document to the database      
-    for mention in recent_mentions:
-        try:
-            url = mention._json['entities']['urls'][0]['expanded_url']
-            if(validate_doc(url)): # if the specified tweet doesn't exist
-                upload(mention)  
-            else:
-                print("already exists")          
-        except: # won't add the tweet if there is a problem
-            continue
-
-# get all mentions and add to mongo_db
-# compare existing mentions if they don't exist
+        
+    for mention in recent_mentions: # going through each of the mentions
+        tweet_logic(mention)
