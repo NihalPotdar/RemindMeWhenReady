@@ -12,7 +12,7 @@ import json
 # mongo db
 client = MongoClient(credentials.mongo_db_client) 
 list_db = {}
-test_endpoint = "https://eng3ecop7bsoc.x.pipedream.net"
+test_endpoint = ""
 db_lengths = []
 db_new_lengths = []
 
