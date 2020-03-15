@@ -61,9 +61,10 @@ def upload_and_check(hyperlink):
     except Exception as e:
         print(e)
 
-if __name__ == "__main__":
+def console():
     #Top10Collections.delete_many({}) # clearing the mongo database
-    
+    global first_mark_url
+
     # using beasutiful soup to fix the html formatting
     page = requests.get(get_url())
     soup = BeautifulSoup(page.content, 'html.parser')
@@ -81,3 +82,6 @@ if __name__ == "__main__":
             first_mark_url = i.find("q=")+2
 
         upload_and_check(i)
+
+if __name__ == "__main__":
+    console()

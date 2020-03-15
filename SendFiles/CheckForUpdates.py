@@ -5,12 +5,20 @@ import requests
 import time
 from flask import Flask, request
 import send
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
+import json
 
+# mongo db
 client = MongoClient(credentials.mongo_db_client) 
 list_db = {}
 test_endpoint = "https://eng3ecop7bsoc.x.pipedream.net"
 db_lengths = []
 db_new_lengths = []
+
+# email
+email = "\n "
+to_send = False
 
 app = Flask(__name__)
 
@@ -44,45 +52,76 @@ def find_documents_in_collection(original): # creates a snapshot of the inital n
     print(db_lengths) 
     print("new:",db_new_lengths)
 
-
-def create_email():
-    count = 0
-    '''
+def create_email(): # formulates the email to be sent out
+    counter = 0
     for db_name in list_db: # a dict of all the databases
-        for collection in range(len(list_db[db_name])): # a list of all the collections
-            count = count+1
-            diff = db_new_lengths[count]-db_lengths[count]
-            '''
-    for i in client['Twitter_API']['Mentions'].find().sort('_id', -1).limit(1):
-        print(i)
+        for collection in list_db[db_name]: # find all collections
+            global email
+            num_queries = db_new_lengths[counter]-db_lengths[counter]
+            
+            if num_queries != 0: # new materials added
+                global to_send
+                to_send = True 
+
+                email = email + db_name + " - " + collection + " <br> "
+                for i in client[db_name][collection].find().sort('_id', -1).limit(num_queries): # going through all of the elements in the database
+                    email = email+str(i)+" <br> "
+                email = email +" <br> "
+
+            counter = counter+1
+    print("email: ", email)
+
+def send_email():
+    # creating the send grid service
+    sendGrid = SendGridAPIClient(credentials.sendGridKey)
+
+    message = Mail(
+        from_email='nihalpot2002@gmail.com',
+        to_emails='nihalpot2002@gmail.com',
+        subject='Social Media Updates',
+        html_content='<strong>'+email+'<strong>')
+    try:
+        response = sendGrid.send(message)
+        return str(response.status_code)
+    except Exception as e:
+        return str(e)
 
 def call_methods():
-    # before the process
-    find_databases_and_collections() # finds the list of databases that we have to check
+    # finds the list of databases that we have to check
+    find_databases_and_collections() 
 
     # finding the number of old documents in the collections
     find_documents_in_collection(True) 
 
-    #time.sleep(60) # test for this functionality
+    # gets the data and wait for the response
+    print("Waiting")
+    time.sleep(30) 
 
     # finding the number of new documents in the collection
     find_documents_in_collection(False)
 
     # compile the message
     create_email()
-
-    #send the email
-    #send_email()
-
-    # after the process
-    #check_for_change() # checks the database for any changes
-    # find if something has changed in the database and alert user if required
+    
+    # send the email
+    if to_send:
+        print(send_email())
 
 def go_on_indefinitely():
     while(True): # comes back here every 7 days
-        call_other_methods()
+        call_methods()
         time.sleep(24*7*60)
 
+def delete_all():
+    for i in client.list_databases({}):
+        print(i)
+        name = i['name']
+        
+        if name != "admin" and name != 'local':
+            for collection in client[i['name']].list_collection_names():
+                client[name][collection].delete_many({})
+            
+#delete_all()
 call_methods()
 #print(db_lengths)
 #print(client['Twitter_API'].list_collection_names())

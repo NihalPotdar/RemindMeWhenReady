@@ -70,8 +70,7 @@ def tweet_logic(mention):
     except Exception as e: # won't add the tweet if there is a problem
         print(e)
 
-if(__name__ == '__main__'):
-    # name of the user
+def console():
     user = UserDetails.user
     
     # recent mentions on twitter
@@ -79,3 +78,8 @@ if(__name__ == '__main__'):
         
     for mention in recent_mentions: # going through each of the mentions
         tweet_logic(mention)
+
+if(__name__ == '__main__'):
+    # name of the user
+    console()
+    
