@@ -121,7 +121,7 @@ def delete_all():
             for collection in client[i['name']].list_collection_names():
                 client[name][collection].delete_many({})
             
-#delete_all()
-call_methods()
+delete_all()
+#call_methods()
 #print(db_lengths)
 #print(client['Twitter_API'].list_collection_names())

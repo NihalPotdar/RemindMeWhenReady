@@ -3,3 +3,4 @@ pymongo
 tweepy
 dnspython
 flask
+json
