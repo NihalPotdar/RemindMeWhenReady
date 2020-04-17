@@ -1,6 +1,7 @@
 from flask import Flask
 import ParseWeb
 import ParseTwitter
+import os
 
 app = Flask(__name__)
 
@@ -11,4 +12,5 @@ def interact():
     return "Operation Completed"
 
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0')    
+    environment_port = os.getenv("PORT", 5000)
+    app.run(debug=True, host='0.0.0.0', port=environment_port)    
