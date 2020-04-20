@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import './product_manager.dart';
+import './flutter_button.dart';
 
 main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  List<String> products = ["Nixon Camera", "nikon camera"];
+  final List<String> products = ["Nixon Camera", "nikon camera"];
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -14,7 +15,11 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(
           title: Text('Test123'),
         ),
-        body: ProductCreate(products),
+       // body: ProductCreate(products),
+       body: Container(
+         child:
+          Button(),
+       ),
       ),
     );
   }

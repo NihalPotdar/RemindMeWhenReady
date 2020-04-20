@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import './products.dart';
 
 class ProductCreate extends StatefulWidget {
-  final List<String> StartingProducts;
+  final List<String> startingProducts;
 
-  ProductCreate(this.StartingProducts);
+  ProductCreate(this.startingProducts);
 
   @override
   State<StatefulWidget> createState() {
@@ -18,13 +18,13 @@ class _ProductManager extends State<ProductCreate> {
 
   @override
   void initState() {
-    products = widget.StartingProducts;
+    products = widget.startingProducts;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Column(  
       children: [
         Container(
           margin: EdgeInsets.all(10.0),
