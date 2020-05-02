@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import './product_manager.dart';
-import './flutter_button.dart';
 
 main() {
   runApp(MyApp());
@@ -15,11 +14,7 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(
           title: Text('Test123'),
         ),
-       // body: ProductCreate(products),
-       body: Container(
-         child:
-          Button(),
-       ),
+       // body: ProductCreate(products)
       ),
     );
   }
