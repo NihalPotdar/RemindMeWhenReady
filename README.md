@@ -3,8 +3,7 @@
 ## Description
 A cross-platform mobile app aimed at resolving the mental anxiety coming from excessive technology use, by allowing users to customize the notifications coming from their phone and beyond!
 Traditionally, the solution to this problem has been to avoid technology use but with the growing relevance of technology in our lives, this has become impractical.
-RemindMeWhenReady uses a novel approach to allow users to select the sources of their most **important** notifications for immediate viewing
-while retaining the old notifications but with a decreased priority.
+RemindMeWhenReady uses a novel approach to allow users to select the sources of their most **important** notifications for an immediate response while retaining the old notifications for later viewing.
 
 #### Our goal is to providers users with only the key information that they require, while ensuring that they are caught up with everything else.
 
@@ -12,8 +11,8 @@ while retaining the old notifications but with a decreased priority.
 
 ### Backend
 
-Our backend consists of Restful flask servers designed to support a web scraper and a web-sockets based notification service,
-organized as a part in a microservices architecture with Docker.
+Our backend consists of two Restful flask servers designed to support a web scraper and a web-sockets based notification service,
+organized as a microservices architecture with Docker.
 
 1. [Install Python](https://www.python.org/downloads/)
 
